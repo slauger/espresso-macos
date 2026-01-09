@@ -27,9 +27,13 @@ Espresso prevents session timeouts and monitors for notifications in remote desk
 
 1. Download the latest release from [GitHub Releases](https://github.com/slauger/espresso-macos/releases)
 2. Open the DMG and drag **Espresso.app** to Applications
-3. Launch Espresso from Applications
+3. **First launch**: Right-click Espresso.app → "Open" → Click "Open" again
+   - macOS will show a Gatekeeper warning (app is not signed)
+   - Alternative: `xattr -cr /Applications/Espresso.app` in Terminal
 
 The ☕ icon appears in your menu bar. Click it to enable features.
+
+> **Note**: The app is not code-signed (requires Apple Developer Account $99/year). It's safe to run, source code is public.
 
 ### Option 2: Install from Source
 
