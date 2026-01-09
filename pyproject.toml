@@ -39,13 +39,21 @@ audio = [
 full = [
     "rumps>=0.4.0",
     "sounddevice>=0.4.6",
-    "numpy>=1.20.0"
+    "numpy>=1.20.0",
+    "Pillow>=9.0.0",
+    "pyobjc-framework-Quartz>=8.0",
+    "pyobjc-framework-Vision>=8.0"
+]
+dev = [
+    "pyinstaller>=5.0",
+    "build",
+    "twine"
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/espresso-app"
-Repository = "https://github.com/yourusername/espresso-app"
-Issues = "https://github.com/yourusername/espresso-app/issues"
+Homepage = "https://github.com/slauger/espresso-macos"
+Repository = "https://github.com/slauger/espresso-macos"
+Issues = "https://github.com/slauger/espresso-macos/issues"
 
 [project.scripts]
 espresso = "espresso.cli:main"
