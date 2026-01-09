@@ -34,9 +34,10 @@ Clean separation of concerns:
 
 ## Important Files
 
-- `docs/DEVELOPMENT.md` - Detailed development history and troubleshooting
-- `docs/AUDIO_FINGERPRINTING.md` - Audio fingerprinting docs
+- `docs/AUDIO_SETUP.md` - Audio monitoring setup guide (BlackHole, Multi-Output, configuration)
+- `docs/AUDIO_FINGERPRINTING.md` - Advanced audio fingerprinting feature
 - `docs/SCREEN_MONITORING.md` - Screen monitoring implementation details
+- `docs/DEVELOPMENT.md` - Detailed development history and troubleshooting
 - `tools/` - Utility scripts (learn_sound.py, identify_sound.py, setup-autostart.sh)
 - `tests/` - Test scripts
 

@@ -302,6 +302,7 @@ Screen monitoring complements audio monitoring:
 
 ## See Also
 
-- [AUDIO_FINGERPRINTING.md](AUDIO_FINGERPRINTING.md) - Audio-based detection
-- [CLAUDE.md](CLAUDE.md) - Development state and history
-- [README.md](README.md) - Main project documentation
+- [AUDIO_SETUP.md](AUDIO_SETUP.md) - Audio monitoring setup
+- [AUDIO_FINGERPRINTING.md](AUDIO_FINGERPRINTING.md) - Advanced audio fingerprinting
+- [DEVELOPMENT.md](DEVELOPMENT.md) - Development state and history
+- [README.md](../README.md) - Main project documentation
