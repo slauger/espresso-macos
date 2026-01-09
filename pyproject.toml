@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "espresso-app"
-version = "0.0.1"
+version = "0.1.0"
 description = "Keep your apps awake with a shot of activity"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -69,7 +69,6 @@ espresso = ["py.typed"]
 "*" = ["icons/*.png"]
 
 [tool.semantic_release]
-version_toml = ["pyproject.toml:project.version"]
 branch = "main"
 upload_to_pypi = false
 upload_to_release = true
@@ -77,6 +76,12 @@ build_command = "pip install build && python -m build"
 major_on_zero = false
 tag_format = "v{version}"
 commit_parser = "angular"
+
+# Don't modify pyproject.toml or create changelog commits
+# Version is managed via git tags only, no file modifications
+version_toml = []
+changelog_file = "CHANGELOG.md"
+hvcs_release_name = "v{version}"
 
 [tool.semantic_release.commit_parser_options]
 allowed_tags = ["feat", "fix", "docs", "style", "refactor", "perf", "test", "build", "ci", "chore", "revert"]
