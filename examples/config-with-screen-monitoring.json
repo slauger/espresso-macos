@@ -1,0 +1,13 @@
+{
+  "app_name": "Citrix Viewer",
+  "interval_seconds": 60,
+  "screen_monitoring": {
+    "enabled": true,
+    "scan_interval": 2,
+    "detection_method": "color",
+    "teams_notification_color": "#464775",
+    "color_tolerance": 30,
+    "min_pixels": 1000,
+    "debug_screenshots": false
+  }
+}

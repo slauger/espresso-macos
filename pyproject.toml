@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "espresso-app"
+version = "0.1.0"
+description = "Keep your apps awake with a shot of activity"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Simon", email = "simon@example.com"}
+]
+keywords = ["espresso", "keepalive", "remote-desktop", "activity", "macos", "citrix", "teams"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: MacOS :: MacOS X",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Desktop Environment",
+    "Topic :: Utilities",
+]
+
+dependencies = []
+
+[project.optional-dependencies]
+gui = ["rumps>=0.4.0"]
+audio = [
+    "sounddevice>=0.4.6",
+    "numpy>=1.20.0"
+]
+full = [
+    "rumps>=0.4.0",
+    "sounddevice>=0.4.6",
+    "numpy>=1.20.0"
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/espresso-app"
+Repository = "https://github.com/yourusername/espresso-app"
+Issues = "https://github.com/yourusername/espresso-app/issues"
+
+[project.scripts]
+espresso = "espresso.cli:main"
+espresso-gui = "espresso.gui:main"
+espresso-list = "espresso.list_apps:main"
+espresso-list-audio = "espresso.list_audio:main"
+
+[tool.setuptools]
+packages = ["espresso"]
+
+[tool.setuptools.package-data]
+espresso = ["py.typed"]
+"*" = ["icons/*.png"]

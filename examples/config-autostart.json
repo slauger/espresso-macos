@@ -1,0 +1,20 @@
+{
+  "app_name": "Citrix Viewer",
+  "interval_seconds": 60,
+  "audio_device": "BlackHole",
+  "notification_threshold": 0.05,
+  "call_threshold": 0.02,
+  "call_duration": 3.0,
+  "autostart": true,
+  "autostart_audio": true,
+  "autostart_screen": true,
+  "screen_monitoring": {
+    "enabled": true,
+    "scan_interval": 2,
+    "detection_method": "color",
+    "teams_notification_color": "#464775",
+    "color_tolerance": 30,
+    "min_pixels": 1000,
+    "debug_screenshots": false
+  }
+}

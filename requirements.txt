@@ -1,0 +1,2 @@
+# GUI dependencies (optional)
+rumps>=0.4.0

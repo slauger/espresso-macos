@@ -1,0 +1,8 @@
+{
+  "app_name": "Citrix Viewer",
+  "interval_seconds": 60,
+  "audio_device": "BlackHole",
+  "notification_threshold": 0.05,
+  "call_threshold": 0.02,
+  "call_duration": 3.0
+}
