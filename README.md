@@ -39,13 +39,12 @@ git clone https://github.com/slauger/espresso-macos.git
 cd espresso-macos
 pip install -e .[full]
 
-# Launch GUI
+# Launch GUI (works without config!)
 espresso-gui
 
-# Optional: Configure autostart
+# Optional: Setup autostart with config
 mkdir -p ~/.espresso
 cp examples/config-autostart.json ~/.espresso/config.json
-espresso-gui
 ```
 
 ## Features
@@ -59,15 +58,25 @@ espresso-gui
 
 ## Configuration
 
-Espresso looks for `~/.espresso/config.json`:
+**Configuration is optional!** Espresso works out of the box with sensible defaults.
+
+### Optional: Create `~/.espresso/config.json`
 
 ```json
 {
   "app_name": "Citrix Viewer",
   "interval_seconds": 60,
-  "autostart": true
+  "autostart": true,
+  "autostart_audio": true,
+  "audio_device": "BlackHole 2ch"
 }
 ```
+
+**Default values** (when no config exists):
+- `app_name`: "Citrix Viewer"
+- `interval_seconds`: 60
+- `autostart`: false (manual start)
+- `audio_device`: null (configure for audio monitoring)
 
 See [`examples/`](examples/) for complete configuration examples.
 
