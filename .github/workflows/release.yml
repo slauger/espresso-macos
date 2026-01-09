@@ -1,22 +1,53 @@
-name: Build macOS Binary
+name: Release and Build
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
-  build-macos:
-    name: Build macOS Binary
-    runs-on: macos-latest
+  release:
+    name: Semantic Release
+    runs-on: ubuntu-latest
+
+    outputs:
+      released: ${{ steps.semantic.outputs.released }}
+      version: ${{ steps.semantic.outputs.version }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Python Semantic Release
+        id: semantic
+        uses: python-semantic-release/python-semantic-release@v9.8.8
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-macos:
+    name: Build macOS Binary
+    runs-on: macos-latest
+    needs: release
+    if: needs.release.outputs.released == 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: v${{ needs.release.outputs.version }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -49,10 +80,8 @@ jobs:
 
       - name: Create DMG
         run: |
-          # Install create-dmg for better DMG creation
           brew install create-dmg
 
-          # Create DMG with nice window
           create-dmg \
             --volname "Espresso Installer" \
             --volicon "icons/icon-512.png" \
@@ -63,50 +92,26 @@ jobs:
             --hide-extension "Espresso.app" \
             --app-drop-link 425 120 \
             --no-internet-enable \
-            "dist/Espresso-macOS.dmg" \
+            "dist/Espresso-${{ needs.release.outputs.version }}-macOS.dmg" \
             "dist/Espresso.app" || true
 
-          # Fallback to simple DMG if create-dmg fails
-          if [ ! -f "dist/Espresso-macOS.dmg" ]; then
+          if [ ! -f "dist/Espresso-${{ needs.release.outputs.version }}-macOS.dmg" ]; then
             echo "create-dmg failed, creating simple DMG..."
-            hdiutil create -volname "Espresso" -srcfolder "dist/Espresso.app" -ov -format UDZO "dist/Espresso-macOS.dmg"
+            hdiutil create -volname "Espresso" -srcfolder "dist/Espresso.app" -ov -format UDZO "dist/Espresso-${{ needs.release.outputs.version }}-macOS.dmg"
           fi
-
-      - name: Get version
-        id: version
-        run: |
-          if [[ $GITHUB_REF == refs/tags/v* ]]; then
-            VERSION=${GITHUB_REF#refs/tags/v}
-          else
-            VERSION=$(git rev-parse --short HEAD)
-          fi
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Version: $VERSION"
 
       - name: Create ZIP archive
         run: |
           cd dist
-          zip -r "Espresso-${{ steps.version.outputs.version }}-macOS.zip" Espresso.app
+          zip -r "Espresso-${{ needs.release.outputs.version }}-macOS.zip" Espresso.app
           cd ..
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: Espresso-macOS
-          path: |
-            dist/Espresso-macOS.dmg
-            dist/Espresso-*.zip
-          retention-days: 90
-
-      - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Upload binaries to release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: v${{ needs.release.outputs.version }}
           files: |
-            dist/Espresso-macOS.dmg
-            dist/Espresso-*.zip
-          draft: false
-          prerelease: false
-          generate_release_notes: true
+            dist/Espresso-*-macOS.dmg
+            dist/Espresso-*-macOS.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

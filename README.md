@@ -23,20 +23,30 @@ Espresso prevents session timeouts and monitors for notifications in remote desk
 
 ## Quick Start
 
+### Option 1: Download Binary (Recommended)
+
+1. Download the latest release from [GitHub Releases](https://github.com/slauger/espresso-macos/releases)
+2. Open the DMG and drag **Espresso.app** to Applications
+3. Launch Espresso from Applications
+
+The ☕ icon appears in your menu bar. Click it to enable features.
+
+### Option 2: Install from Source
+
 ```bash
-# Install
-pip install espresso-app[full]
+# Clone and install
+git clone https://github.com/slauger/espresso-macos.git
+cd espresso-macos
+pip install -e .[full]
 
 # Launch GUI
 espresso-gui
 
-# Or with autostart
+# Optional: Configure autostart
 mkdir -p ~/.espresso
 cp examples/config-autostart.json ~/.espresso/config.json
 espresso-gui
 ```
-
-The ☕ icon appears in your menu bar. Click it to enable features.
 
 ## Features
 
@@ -81,45 +91,47 @@ Detect notifications visually via screenshot analysis and OCR.
 - 📖 [Development Guide](docs/DEVELOPMENT.md)
 - 📋 [Config Examples](examples/)
 
-## Installation Options
+## Installation
 
-```bash
-# Minimal (keepalive only)
-pip install espresso-app
+### Binary Release (Recommended)
 
-# GUI support
-pip install espresso-app[gui]
-
-# Full features (audio + screen monitoring)
-pip install espresso-app[full]
-```
+Download from [GitHub Releases](https://github.com/slauger/espresso-macos/releases):
+- **Espresso-macOS.dmg** - Drag & drop installer
+- **Espresso-macOS.zip** - Portable .app bundle
 
 ### From Source
 
 ```bash
-git clone https://github.com/simonlauger/espresso.git
-cd espresso
+git clone https://github.com/slauger/espresso-macos.git
+cd espresso-macos
 pip install -e .[full]
+```
+
+**Build your own binary:**
+```bash
+pip install pyinstaller
+pyinstaller espresso-gui.spec
+# → dist/Espresso.app
 ```
 
 ## Usage
 
-### GUI (Recommended)
+### Launch the App
 
+- **Binary**: Open Espresso.app from Applications
+- **From source**: Run `espresso-gui` in terminal
+
+Click the ☕ menu bar icon to:
+- Enable/disable keepalive
+- Enable/disable audio monitoring
+- Enable/disable screen monitoring
+- View status and logs
+
+### CLI (Optional)
+
+For automation or headless usage:
 ```bash
-espresso-gui [--debug]
-```
-
-Click the ☕ menu bar icon to control features.
-
-### CLI
-
-```bash
-# Basic keepalive
-espresso --app "Citrix Viewer" --interval 60
-
-# With config file
-espresso --config ~/.espresso/config.json
+espresso --app "Citrix Viewer" --interval 60 --config ~/.espresso/config.json
 ```
 
 ## Command-Line Options
