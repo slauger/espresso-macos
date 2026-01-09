@@ -16,7 +16,6 @@ cat > ~/.espresso/config.json << 'EOF'
 {
   "app_name": "Citrix Viewer",
   "interval_seconds": 60,
-  "move_pixels": 1,
   "audio_device": "BlackHole",
   "notification_threshold": 0.05,
   "call_threshold": 0.02,

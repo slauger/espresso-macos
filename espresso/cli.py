@@ -85,7 +85,6 @@ def run_keepalive(core: EspressoCore):
     EspressoCore.log(f"Espresso started")
     EspressoCore.log(f"  Target app: {core.app_name}")
     EspressoCore.log(f"  Interval: {core.interval} seconds")
-    EspressoCore.log(f"  Move pixels: {core.pixels}")
     EspressoCore.log(f"Press Ctrl+C to stop")
 
     try:
