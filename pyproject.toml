@@ -71,6 +71,14 @@ espresso = ["py.typed"]
 [tool.semantic_release]
 version_toml = ["pyproject.toml:project.version"]
 branch = "main"
+upload_to_pypi = false
+upload_to_release = true
 build_command = "pip install -e .[full]"
 major_on_zero = false
 tag_format = "v{version}"
+commit_parser = "angular"
+
+[tool.semantic_release.commit_parser_options]
+allowed_tags = ["feat", "fix", "docs", "style", "refactor", "perf", "test", "build", "ci", "chore", "revert"]
+minor_tags = ["feat"]
+patch_tags = ["fix", "perf"]
