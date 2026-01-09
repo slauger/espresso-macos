@@ -248,6 +248,12 @@ Level: 0.0234 ███                   Peak: 0.0823 ████████
 3. **Use in GUI**: Espresso will automatically identify sounds
 4. **Customize notifications**: Different alerts for different sounds
 
+## See Also
+
+- [AUDIO_SETUP.md](AUDIO_SETUP.md) - Basic audio monitoring setup
+- [SCREEN_MONITORING.md](SCREEN_MONITORING.md) - Visual notification detection
+- [README.md](../README.md) - Main project documentation
+
 ---
 
 Made with ☕ and Python
