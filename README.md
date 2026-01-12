@@ -23,7 +23,21 @@ Espresso prevents session timeouts and monitors for notifications in remote desk
 
 ## Quick Start
 
-### Option 1: Download Binary (Recommended)
+### Option 1: Homebrew (Easiest)
+
+```bash
+# Install directly (tap is added automatically)
+brew install slauger/tap/espresso
+
+# Launch
+open /Applications/Espresso.app
+```
+
+The ☕ icon appears in your menu bar. Click it to enable features.
+
+> **Note**: On first launch, macOS will show a Gatekeeper warning (app is not signed). Right-click Espresso.app → "Open" → Click "Open" again, or run: `xattr -cr /Applications/Espresso.app`
+
+### Option 2: Download Binary
 
 1. Download the latest release from [GitHub Releases](https://github.com/slauger/espresso-macos/releases)
 2. Open the DMG and drag **Espresso.app** to Applications
@@ -35,7 +49,7 @@ The ☕ icon appears in your menu bar. Click it to enable features.
 
 > **Note**: The app is not code-signed (requires Apple Developer Account $99/year). It's safe to run, source code is public.
 
-### Option 2: Install from Source
+### Option 3: Install from Source
 
 ```bash
 # Clone and install
@@ -102,30 +116,34 @@ Detect notifications visually via screenshot analysis and OCR.
 - 📖 [Audio Fingerprinting](docs/AUDIO_FINGERPRINTING.md)
 - 📖 [Screen Monitoring Setup](docs/SCREEN_MONITORING.md)
 - 📖 [Development Guide](docs/DEVELOPMENT.md)
+- 📖 [Homebrew Tap Setup](docs/HOMEBREW_SETUP.md) (for maintainers)
 - 📋 [Config Examples](examples/)
 
-## Installation
+## Development
 
-### Binary Release (Recommended)
-
-Download from [GitHub Releases](https://github.com/slauger/espresso-macos/releases):
-- **Espresso-macOS.dmg** - Drag & drop installer
-- **Espresso-macOS.zip** - Portable .app bundle
-
-### From Source
+### Build Your Own Binary
 
 ```bash
-git clone https://github.com/slauger/espresso-macos.git
-cd espresso-macos
-pip install -e .[full]
-```
+# Install dependencies
+pip install -e .[full,dev]
 
-**Build your own binary:**
-```bash
-pip install pyinstaller
+# Build with PyInstaller
 pyinstaller espresso-gui.spec
-# → dist/Espresso.app
+
+# Output: dist/Espresso.app
 ```
+
+### Release Process
+
+Releases are automated via semantic-release:
+- Push to `main` with conventional commits (`feat:`, `fix:`, etc.)
+- GitHub Actions automatically:
+  - Creates git tag and GitHub Release
+  - Builds macOS binary (.app)
+  - Generates DMG and ZIP archives
+  - Updates Homebrew tap
+
+See [HOMEBREW_SETUP.md](docs/HOMEBREW_SETUP.md) for Homebrew tap configuration.
 
 ## Usage
 
