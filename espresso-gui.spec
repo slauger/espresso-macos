@@ -63,8 +63,8 @@ exe = EXE(
     disable_windowed_traceback=False,
     argv_emulation=True,
     target_arch=None,
-    codesign_identity=None,
-    entitlements_file=None,
+    codesign_identity='Apple Development: Simon Lauger (SCUHYFZ5Q3)',
+    entitlements_file='entitlements.plist',
     icon='icons/icon-512.png',
 )
 

@@ -75,6 +75,35 @@ jobs:
           pip install pyinstaller
           pip install -e .[full]
 
+      - name: Import Code Signing Certificate
+        if: ${{ secrets.APPLE_CERTIFICATE != '' }}
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          # Create temporary keychain
+          KEYCHAIN_PATH=$RUNNER_TEMP/build.keychain
+          KEYCHAIN_PASSWORD=$(openssl rand -base64 32)
+
+          # Create keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          # Import certificate
+          echo "$APPLE_CERTIFICATE" | base64 --decode > certificate.p12
+          security import certificate.p12 -k "$KEYCHAIN_PATH" -P "$APPLE_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          # Add keychain to search list
+          security list-keychains -d user -s "$KEYCHAIN_PATH" $(security list-keychains -d user | sed s/\"//g)
+
+          # Verify
+          security find-identity -v -p codesigning
+
+          # Cleanup
+          rm certificate.p12
+
       - name: Build binary with PyInstaller
         run: |
           pyinstaller espresso-gui.spec
@@ -84,6 +113,11 @@ jobs:
           ls -lah dist/
           test -d "dist/Espresso.app" || exit 1
           echo "✅ Espresso.app built successfully"
+
+      - name: Verify Code Signature
+        run: |
+          codesign -vvv --deep --strict "dist/Espresso.app" || echo "⚠️  App is not signed (secrets not configured)"
+          codesign -d --entitlements - "dist/Espresso.app" || echo "⚠️  No entitlements found"
 
       - name: Create DMG
         run: |
@@ -106,6 +140,17 @@ jobs:
             echo "create-dmg failed, creating simple DMG..."
             hdiutil create -volname "Espresso" -srcfolder "dist/Espresso.app" -ov -format UDZO "dist/Espresso-${{ needs.release.outputs.version }}-macOS.dmg"
           fi
+
+      - name: Sign DMG
+        if: ${{ secrets.APPLE_CERTIFICATE != '' }}
+        run: |
+          codesign --sign "Apple Development: Simon Lauger (SCUHYFZ5Q3)" \
+            --force \
+            --timestamp \
+            "dist/Espresso-${{ needs.release.outputs.version }}-macOS.dmg"
+
+          # Verify DMG signature
+          codesign -vvv "dist/Espresso-${{ needs.release.outputs.version }}-macOS.dmg"
 
       - name: Create ZIP archive
         run: |
