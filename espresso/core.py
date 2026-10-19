@@ -3,7 +3,7 @@ Core functionality for espresso operations
 """
 import subprocess
 from datetime import datetime
-from typing import Optional, Callable
+from typing import Callable, List, Optional
 
 
 class EspressoCore:
@@ -22,30 +22,31 @@ class EspressoCore:
         self.consecutive_errors = 0
         self.max_errors = 5
 
-    def is_app_running(self) -> bool:
-        """Check if target app is running and has windows"""
+    def _get_window_pids(self) -> List[int]:
+        """Return PIDs of all target app processes that have at least one window"""
         script = f'''
         tell application "System Events"
-            set appRunning to exists (process "{self.app_name}")
-            if appRunning then
+            set pids to {{}}
+            repeat with p in (every process whose name is "{self.app_name}")
                 try
-                    set winCount to count of windows of process "{self.app_name}"
-                    return winCount > 0
-                on error
-                    return false
+                    if (count of windows of p) > 0 then set end of pids to unix id of p
                 end try
-            else
-                return false
-            end if
+            end repeat
+            set AppleScript's text item delimiters to ","
+            return pids as text
         end tell
         '''
 
         try:
             result = subprocess.run(['osascript', '-e', script],
                                   capture_output=True, text=True, timeout=5)
-            return result.stdout.strip() == "true"
+            return [int(pid) for pid in result.stdout.strip().split(',') if pid.strip()]
         except Exception:
-            return False
+            return []
+
+    def is_app_running(self) -> bool:
+        """Check if target app is running and has windows"""
+        return len(self._get_window_pids()) > 0
 
     def perform_keepalive_action(self) -> bool:
         """
@@ -54,19 +55,23 @@ class EspressoCore:
         Returns:
             True if action successful, False otherwise
         """
-        # Focus Citrix, send key, return to previous app
-        return self._send_key_with_focus()
+        # Multiple sessions run as separate processes with the same name,
+        # so every one of them needs its own keepalive
+        pids = self._get_window_pids()
+        if not pids:
+            return False
+        return all([self._send_key_with_focus(pid) for pid in pids])
 
-    def _send_key_with_focus(self) -> bool:
-        """Focus Citrix window, send key, return to previous app"""
+    def _send_key_with_focus(self, pid: int) -> bool:
+        """Focus Citrix window of the given process, send key, return to previous app"""
         try:
             script = f'''
             tell application "System Events"
                 -- Remember current frontmost app
-                set currentApp to name of first application process whose frontmost is true
+                set currentApp to first application process whose frontmost is true
 
-                -- Focus Citrix Viewer
-                tell process "{self.app_name}"
+                -- Focus Citrix Viewer session
+                tell (first process whose unix id is {pid})
                     set frontmost to true
                 end tell
 
@@ -80,9 +85,7 @@ class EspressoCore:
                 delay 0.1
 
                 -- Return to previous app
-                tell process currentApp
-                    set frontmost to true
-                end tell
+                set frontmost of currentApp to true
             end tell
             '''
 
