@@ -24,6 +24,7 @@ class AudioMonitor:
         notification_threshold: float = 0.05,
         call_threshold: float = 0.02,
         call_duration: float = 3.0,
+        notification_cooldown: float = 30.0,
     ):
         """
         Initialize audio monitor
@@ -35,6 +36,7 @@ class AudioMonitor:
             notification_threshold: RMS threshold for notification detection (0-1)
             call_threshold: RMS threshold for call detection (0-1)
             call_duration: Seconds of sustained audio to detect as call
+            notification_cooldown: Seconds to wait before sending another notification (default: 30.0)
         """
         if sd is None:
             raise ImportError(
@@ -47,6 +49,7 @@ class AudioMonitor:
         self.notification_threshold = notification_threshold
         self.call_threshold = call_threshold
         self.call_duration = call_duration
+        self.notification_cooldown = notification_cooldown
 
         # State
         self.running = False
@@ -57,7 +60,6 @@ class AudioMonitor:
         self.last_notification_time = None
         self.call_start_time = None
         self.in_call = False
-        self.notification_cooldown = 2.0  # seconds
 
         # Peak tracking for short sounds
         self.peak_level = 0.0

@@ -1,6 +1,7 @@
 {
   "app_name": "Citrix Viewer",
   "interval_seconds": 60,
+  "notification_cooldown": 30.0,
   "screen_monitoring": {
     "enabled": true,
     "scan_interval": 2,

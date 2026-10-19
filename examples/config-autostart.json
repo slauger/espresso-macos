@@ -5,6 +5,7 @@
   "notification_threshold": 0.05,
   "call_threshold": 0.02,
   "call_duration": 3.0,
+  "notification_cooldown": 30.0,
   "autostart": true,
   "autostart_audio": true,
   "autostart_screen": true,

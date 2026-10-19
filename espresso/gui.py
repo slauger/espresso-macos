@@ -77,6 +77,7 @@ class EspressoApp(rumps.App):
         notification_threshold=0.05,
         call_threshold=0.02,
         call_duration=3.0,
+        notification_cooldown=30.0,
         screen_config=None
     ):
         # Get icon path
@@ -109,7 +110,8 @@ class EspressoApp(rumps.App):
                     device_name=audio_device,
                     notification_threshold=notification_threshold,
                     call_threshold=call_threshold,
-                    call_duration=call_duration
+                    call_duration=call_duration,
+                    notification_cooldown=notification_cooldown
                 )
                 self.audio_monitor.set_notification_callback(self.on_audio_notification)
                 self.audio_monitor.set_call_callbacks(
@@ -576,6 +578,7 @@ def main():
     notification_threshold = config.get('notification_threshold', 0.05)
     call_threshold = config.get('call_threshold', 0.02)
     call_duration = config.get('call_duration', 3.0)
+    notification_cooldown = config.get('notification_cooldown', 30.0)
     screen_config = config.get('screen_monitoring', {})
     autostart = args.autostart or config.get('autostart', False)
     autostart_audio = args.autostart_audio or config.get('autostart_audio', False)
@@ -592,6 +595,7 @@ def main():
         notification_threshold=notification_threshold,
         call_threshold=call_threshold,
         call_duration=call_duration,
+        notification_cooldown=notification_cooldown,
         screen_config=screen_config
     )
 
